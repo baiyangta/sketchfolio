@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>%PAGE_TITLE%</title>
+    <meta name="description" content="%PAGE_DESC%" />
+    <meta name="theme-color" content="#f1f0eb" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="%PAGE_TITLE%" />
+    <meta property="og:description" content="%PAGE_DESC%" />
+    <!-- 部署在 GitHub Pages 时自动变成 https://<用户名>.github.io/<仓库>/og.png，
+         换自己的域名就在 vite.config.js 里改 -->
+    <meta property="og:image" content="%OG_IMAGE%" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- 没有 JS 时（爬虫、禁用 JS 的浏览器）文字要能看见，
+         所以所有"先隐藏再动画"的样式都挂在 .js 上 -->
+    <script>
+      document.documentElement.classList.add('js')
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="max-width: 40em; margin: 12vh auto; padding: 0 24px; font-family: system-ui, sans-serif; line-height: 1.9">
+        <h1>Yangh · 个人主页</h1>
+        <p>在校学生，前端方向。这里放几个练手项目、一些还在学的东西，以及联系方式。</p>
+        <p>这个页面的动画需要 JavaScript，请开启后刷新。</p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

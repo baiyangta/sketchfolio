@@ -1,0 +1,454 @@
+/* ============================================================
+   画廊：一面挂画墙 + 横向拖动的画框 + 详情卡片
+   ============================================================ */
+
+.gallery {
+  padding-bottom: clamp(48px, 7vh, 96px);
+}
+
+.gallery__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px clamp(24px, 4vw, 64px);
+}
+
+.gallery__head .section-title {
+  margin-bottom: clamp(18px, 3vh, 30px);
+}
+
+.gallery__intro {
+  max-width: 24em;
+  margin: 0 0 clamp(22px, 3.4vh, 34px);
+  font-size: 0.96rem;
+  line-height: 1.8;
+  color: var(--ink-faint);
+  text-align: right;
+}
+
+.wall {
+  position: relative;
+  margin-top: clamp(10px, 2vh, 26px);
+}
+
+/* ---------- 天际线 ---------- */
+
+.wall__sky {
+  display: block;
+  width: 100%;
+  height: clamp(90px, 13vw, 165px);
+  margin-bottom: calc(-1 * clamp(26px, 4vw, 54px));
+  color: var(--ink);
+  opacity: 0.24;
+  pointer-events: none;
+}
+
+.wall__sky path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wall__sky .sky-far {
+  opacity: 0.5;
+  stroke-width: 1.1;
+}
+
+.wall__sky .sky-near {
+  opacity: 1;
+}
+
+/* ---------- 横向滚动的墙 ---------- */
+
+.wall__rail {
+  position: relative;
+  z-index: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* 不做吸附：拖拽和惯性滚动手感更自然，循环跳位也不会打架 */
+  scroll-behavior: auto;
+  padding: 28px 0 16px;
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.wall__rail::-webkit-scrollbar {
+  display: none;
+}
+
+.wall__rail.is-dragging {
+  cursor: grabbing;
+}
+
+.wall__rail.is-dragging .frame__card {
+  pointer-events: none;
+}
+
+.wall__track {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(24px, 3.2vw, 58px);
+  width: max-content;
+  margin: 0;
+  padding: 0 var(--pad);
+  list-style: none;
+  /* 挂画的那根横线，随内容一起滚 */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='8'%3E%3Cpath d='M0 4 C 40 1, 80 7, 120 4 C 160 1, 200 7, 240 4' fill='none' stroke='%23b9b4a6' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: 0 -2px;
+  background-size: 240px 8px;
+}
+
+/* ---------- 画框 ---------- */
+
+.frame {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(226px, 24vw, 306px);
+  padding-top: 26px;
+}
+
+.frame:nth-child(3n + 1) .frame__card {
+  --tilt: -1.1deg;
+}
+.frame:nth-child(3n + 2) .frame__card {
+  --tilt: 0.7deg;
+}
+.frame:nth-child(3n + 3) .frame__card {
+  --tilt: -0.45deg;
+}
+
+.frame__hanger {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 66%;
+  height: 26px;
+  transform: translateX(-50%);
+  color: var(--ink-faint);
+  overflow: visible;
+}
+
+.frame__hanger path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.frame__hanger circle {
+  fill: currentColor;
+}
+
+.frame__card {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 12px 12px 10px;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: var(--paper-card);
+  border: 1.5px solid rgba(35, 32, 27, 0.72);
+  border-radius: 2px;
+  box-shadow: var(--shadow-1);
+  transform: rotate(var(--tilt, 0deg));
+  transform-origin: 50% 0;
+  cursor: pointer;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+/* 描了第二遍的细边 */
+.frame__card::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border: 1px solid rgba(35, 32, 27, 0.14);
+  border-radius: 3px;
+  transform: rotate(0.45deg);
+  pointer-events: none;
+}
+
+.frame__card:hover,
+.frame__card:focus-visible {
+  transform: rotate(0deg) translateY(-7px);
+  box-shadow: var(--shadow-2);
+}
+
+.frame__art {
+  display: block;
+}
+
+.frame__art .thumb {
+  background: #ffffff;
+  border-style: solid;
+  border-color: rgba(35, 32, 27, 0.22);
+}
+
+.frame__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid rgba(35, 32, 27, 0.22);
+}
+
+.frame__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.frame__title {
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.frame__year {
+  flex: none;
+  font-family: var(--font-hand);
+  font-size: 0.92rem;
+  color: var(--ink-faint);
+}
+
+/* ---------- 敬请期待的占位画框 ---------- */
+
+.frame__card--soon {
+  background: rgba(255, 255, 255, 0.3);
+  border-style: dashed;
+  border-color: rgba(35, 32, 27, 0.34);
+  box-shadow: none;
+  cursor: default;
+  color: var(--ink-faint);
+}
+
+.frame__card--soon::after {
+  border-color: rgba(35, 32, 27, 0.07);
+}
+
+.frame__card--soon:hover,
+.frame__card--soon:focus-visible {
+  transform: rotate(var(--tilt, 0deg));
+  box-shadow: none;
+}
+
+.frame__soon-art {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  border: 1px dashed rgba(35, 32, 27, 0.2);
+  border-radius: 1px;
+}
+
+.frame__soon-art svg {
+  width: 34%;
+  height: auto;
+  opacity: 0.55;
+}
+
+.frame__card--soon .frame__title {
+  font-weight: 400;
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+}
+
+.frame__note {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--ink-faint);
+  opacity: 0.85;
+}
+
+/* ---------- 地面 ---------- */
+
+.wall__floor {
+  display: block;
+  width: 100%;
+  height: 10px;
+  margin-top: 2px;
+  color: var(--rule);
+}
+
+.wall__floor path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+/* ---------- 详情卡片 ---------- */
+
+.vitrine {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vw, 44px);
+  background: rgba(236, 234, 227, 0.74);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+  cursor: pointer;
+}
+
+.vitrine.is-shown {
+  opacity: 1;
+}
+
+.vitrine.is-closing {
+  opacity: 0;
+}
+
+.vitrine__card {
+  position: relative;
+  width: min(548px, 100%);
+  max-height: min(86vh, 800px);
+  overflow-y: auto;
+  padding: clamp(26px, 3.4vw, 42px);
+  background: var(--paper-card);
+  border: 1.5px solid rgba(35, 32, 27, 0.75);
+  border-radius: 2px;
+  box-shadow: var(--shadow-2);
+  cursor: auto;
+  transform: translateY(18px) scale(0.985);
+  transition: transform 0.45s var(--ease);
+}
+
+.vitrine.is-shown .vitrine__card {
+  transform: none;
+}
+
+/* 程序化聚焦卡片本身时不要画焦点框 */
+.vitrine__card:focus {
+  outline: none;
+}
+
+.vitrine.is-closing .vitrine__card {
+  transform: translateY(10px) scale(0.99);
+}
+
+.vitrine__close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.vitrine__close:hover,
+.vitrine__close:focus-visible {
+  color: var(--accent);
+  border-color: rgba(35, 32, 27, 0.25);
+}
+
+.vitrine__kicker {
+  margin: 0 0 6px;
+  font-family: var(--font-hand);
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+}
+
+.vitrine__title {
+  margin: 0 0 18px;
+  font-family: var(--font-hand);
+  font-size: clamp(1.8rem, 3.4vw, 2.4rem);
+}
+
+.vitrine__art {
+  margin-bottom: 20px;
+}
+
+.vitrine__art .thumb,
+.vitrine__art img {
+  display: block;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid rgba(35, 32, 27, 0.22);
+}
+
+.vitrine__summary {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+
+.vitrine__label {
+  margin: 22px 0 9px;
+  font-family: var(--font-hand);
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+}
+
+.vitrine__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+
+.vitrine__tags li {
+  padding: 2px 10px;
+  font-family: var(--font-hand);
+  font-size: 0.95rem;
+  color: var(--accent-2);
+  border: 1px solid rgba(47, 86, 112, 0.4);
+  border-radius: 20px 16px 22px 18px / 18px 22px 16px 20px;
+}
+
+/* ---------- 响应式 ---------- */
+
+@media (max-width: 720px) {
+  .gallery__intro {
+    text-align: left;
+  }
+
+  .frame {
+    width: 68vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vitrine,
+  .vitrine__card,
+  .frame__card {
+    transition: none;
+  }
+
+  .vitrine__card {
+    transform: none;
+  }
+
+  .frame__card:hover,
+  .frame__card:focus-visible {
+    transform: none;
+  }
+}

@@ -1,0 +1,13 @@
+packages:
+  - '.'
+
+# pnpm 11 起，这些设置只在这个文件里生效（.npmrc 里的同名项不再被读取）。
+# 扁平 node_modules：避免虚拟存储的软链接在部分 Windows 环境下解析不到依赖。
+nodeLinker: hoisted
+
+# 允许 esbuild 执行安装脚本，否则拿不到二进制。
+allowBuilds:
+  esbuild: true
+
+# 运行脚本前不自动重装依赖。
+verifyDepsBeforeRun: false

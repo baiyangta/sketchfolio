@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Yangh">
+  <rect width="64" height="64" rx="10" fill="#f1f0eb" />
+  <path
+    d="M13 21 C 24 15, 45 16, 52 25 C 59 34, 50 48, 33 51 C 19 53, 10 44, 12 33 C 13.5 25, 21 20, 31 21"
+    fill="none"
+    stroke="#ad4a2a"
+    stroke-width="2.4"
+    stroke-linecap="round"
+  />
+  <path
+    d="M23 21 L 32 35 L 41 20 M 32 35 L 32 47"
+    fill="none"
+    stroke="#23231f"
+    stroke-width="4.4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
