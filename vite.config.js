@@ -48,12 +48,20 @@ const siteOrigin = repo
   : ''
 const ogImage = siteOrigin ? `${siteOrigin}/og.png` : 'https://your-domain.com/og.png'
 
-export default defineConfig({
-  base,
-  plugins: [react(), seoPlugin()],
-  server: {
-    host: '127.0.0.1',
-    port: 5178,
-    strictPort: true,
-  },
+export default defineConfig(({ mode }) => {
+  // 交作业用：单独出一个「双击就能开」的版本（相对路径 + CSS/JS 内联）
+  const single = mode === 'single'
+
+  return {
+    base: single ? './' : base,
+    build: single
+      ? { outDir: 'dist-single', modulePreload: false }
+      : undefined,
+    plugins: [react(), seoPlugin()],
+    server: {
+      host: '127.0.0.1',
+      port: 5178,
+      strictPort: true,
+    },
+  }
 })

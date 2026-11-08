@@ -7,3 +7,4 @@ dist-ssr
 .pnpm-store
 .tmp-esbuild
 .shots
+dist-single
