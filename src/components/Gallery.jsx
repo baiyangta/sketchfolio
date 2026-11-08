@@ -10,6 +10,20 @@ const items = gallery.items
 const coming = gallery.coming ?? []
 const COPIES = 3
 
+/**
+ * 站内绝对路径要补上部署前缀。
+ * GitHub Pages 下面整个站挂在 /<仓库名>/，直接写 /shots/x.jpg 会去域名根目录找，必然 404。
+ * 本地开发时 BASE_URL 是 '/'，补完还是 '/shots/x.jpg'。
+ * 外部链接（http 开头）原样返回。
+ */
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '')
+
+function assetUrl(path) {
+  if (!path) return path
+  if (!path.startsWith('/')) return path
+  return `${BASE}${path}`
+}
+
 export default function Gallery() {
   const scopeRef = useRef(null)
   const railRef = useRef(null)
@@ -81,8 +95,8 @@ export default function Gallery() {
                             {item.image ? (
                               <img
                                 className="frame__img"
-                                src={item.image}
-                                alt=""
+                                src={assetUrl(item.image)}
+                                alt={`${item.title} 的照片`}
                                 loading="lazy"
                               />
                             ) : (
@@ -227,7 +241,7 @@ function DetailCard({ item, closing, onClose }) {
 
         <div className="vitrine__art">
           {item.image ? (
-            <img src={item.image} alt="" />
+            <img src={assetUrl(item.image)} alt={`${item.title} 的照片`} />
           ) : (
             <SketchThumb variant={item.variant} />
           )}
